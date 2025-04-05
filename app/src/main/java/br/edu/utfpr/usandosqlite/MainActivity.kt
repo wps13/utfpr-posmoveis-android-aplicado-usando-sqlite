@@ -1,5 +1,6 @@
 package br.edu.utfpr.usandosqlite
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -42,17 +43,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onBtListarClick() {
-        val registros = banco.read()
-
-        val saida = StringBuilder()
-
-        while (registros.moveToNext()) {
-            saida.append(registros.getString(NOME))
-            saida.append(" - ")
-            saida.append(registros.getString(TELEFONE))
-            saida.append("\n")
-        }
-        Toast.makeText(this, saida.toString(), Toast.LENGTH_LONG).show()
+//        val registros = banco.read()
+//
+//        val saida = StringBuilder()
+//
+//        while (registros.moveToNext()) {
+//            saida.append(registros.getString(NOME))
+//            saida.append(" - ")
+//            saida.append(registros.getString(TELEFONE))
+//            saida.append("\n")
+//        }
+//        Toast.makeText(this, saida.toString(), Toast.LENGTH_LONG).show()
+        val intent = Intent(this, ListarActivity::class.java)
+        startActivity(intent)
     }
 
     private fun onBtAlterarClick() {

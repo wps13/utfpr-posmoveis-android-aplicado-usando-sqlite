@@ -33,7 +33,7 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(
         registro.put("nome", cadastro.nome)
         registro.put("telefone", cadastro.telefone)
 
-        banco.insert(DATABASE_NAME, null, registro)
+        banco.insert(TABLE_NAME, null, registro)
     }
 
     fun update(cadastro: Cadastro) {
@@ -45,7 +45,7 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(
         registro.put("telefone", cadastro.telefone)
 
         banco.update(
-            DATABASE_NAME,
+            TABLE_NAME,
             registro,
             "_id=${cadastro._id}",
             null
@@ -55,14 +55,14 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(
     fun delete(id: Int) {
         val banco = this.writableDatabase
 
-        banco.delete(DATABASE_NAME, "_id=$id", null)
+        banco.delete(TABLE_NAME, "_id=$id", null)
     }
 
     fun search(id: Int): Cadastro? {
         val banco = this.writableDatabase
 
         val registro = banco.query(
-            DATABASE_NAME,
+            TABLE_NAME,
             null,
             "_id=?",
             arrayOf(id.toString()),
@@ -86,7 +86,7 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(
     fun read(): Cursor {
         val banco = this.writableDatabase
         val registros = banco.query(
-            DATABASE_NAME,
+            TABLE_NAME,
             null,
             null,
             null,
