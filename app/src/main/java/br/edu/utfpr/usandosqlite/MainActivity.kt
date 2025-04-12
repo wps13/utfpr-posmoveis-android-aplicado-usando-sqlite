@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onBtPesquisarClick() {
-        val cadastro = banco.search(binding.etCod.toString().toInt())
+        val cadastro = banco.search(binding.etCod.text.toString().toInt())
 
         if (cadastro != null) {
             binding.etNome.setText(cadastro.nome)
