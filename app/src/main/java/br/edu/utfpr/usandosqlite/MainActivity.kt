@@ -21,21 +21,25 @@ class MainActivity : AppCompatActivity() {
 
         setButtonListeners()
 
+        initData()
+
         banco = DatabaseHandler(this)
     }
 
-    private fun setButtonListeners() {
-        binding.btListar.setOnClickListener {
-            onBtListarClick()
+    private fun initData() {
+        if (intent.getIntExtra("cod", 0) != 0) {
+            binding.etCod.setText(intent.getIntExtra("cod", 0).toString())
+            binding.etNome.setText(intent.getStringExtra("nome"))
+            binding.etTelefone.setText(intent.getStringExtra("telefone"))
         }
+    }
+
+    private fun setButtonListeners() {
         binding.btAlterar.setOnClickListener {
             onBtAlterarClick()
         }
         binding.btExcluir.setOnClickListener {
             onBtExcluirClick()
-        }
-        binding.btIncluir.setOnClickListener {
-            onBtIncluirClick()
         }
         binding.btPesquisar.setOnClickListener {
             onBtPesquisarClick()
@@ -99,11 +103,5 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Registro não encontrado", Toast.LENGTH_LONG).show()
         }
 
-    }
-
-    companion object {
-        private const val ID = 0
-        private const val NOME = 1
-        private const val TELEFONE = 2
     }
 }
