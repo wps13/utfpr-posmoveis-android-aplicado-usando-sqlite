@@ -1,8 +1,10 @@
 package br.edu.utfpr.usandosqlite
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import br.edu.utfpr.usandosqlite.database.DatabaseHandler
 import br.edu.utfpr.usandosqlite.databinding.ActivityMainBinding
@@ -31,6 +33,9 @@ class MainActivity : AppCompatActivity() {
             binding.etCod.setText(intent.getIntExtra("cod", 0).toString())
             binding.etNome.setText(intent.getStringExtra("nome"))
             binding.etTelefone.setText(intent.getStringExtra("telefone"))
+        } else {
+            binding.btPesquisar.visibility = View.GONE
+            binding.btExcluir.visibility = View.GONE
         }
     }
 
@@ -46,41 +51,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onBtListarClick() {
-//        val registros = banco.read()
-//
-//        val saida = StringBuilder()
-//
-//        while (registros.moveToNext()) {
-//            saida.append(registros.getString(NOME))
-//            saida.append(" - ")
-//            saida.append(registros.getString(TELEFONE))
-//            saida.append("\n")
-//        }
-//        Toast.makeText(this, saida.toString(), Toast.LENGTH_LONG).show()
-        val intent = Intent(this, ListarActivity::class.java)
-        startActivity(intent)
-    }
-
     private fun onBtAlterarClick() {
-        val cadastro =
-            Cadastro(
-                binding.etCod.text.toString().toInt(),
-                binding.etNome.text.toString(),
-                binding.etTelefone.text.toString()
-            )
 
-        banco.update(cadastro)
+        if (binding.etCod.text.toString().isEmpty()) {
+            _includeCadastro()
+        } else {
+            val cadastro =
+                Cadastro(
+                    binding.etCod.text.toString().toInt(),
+                    binding.etNome.text.toString(),
+                    binding.etTelefone.text.toString()
+                )
 
-        Toast.makeText(this, "Registro alterado com sucesso", Toast.LENGTH_LONG).show()
+            banco.update(cadastro)
+
+            Toast.makeText(this, "Registro alterado com sucesso", Toast.LENGTH_LONG).show()
+        }
+        finish()
     }
 
     private fun onBtExcluirClick() {
         banco.delete(binding.etCod.text.toString().toInt())
         Toast.makeText(this, "Registro excluído com sucesso", Toast.LENGTH_LONG).show()
+        finish()
     }
 
-    private fun onBtIncluirClick() {
+    private fun _includeCadastro() {
         val cadastro =
             Cadastro(
                 0,
@@ -94,14 +90,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onBtPesquisarClick() {
-        val cadastro = banco.search(binding.etCod.text.toString().toInt())
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Código da pessoa")
+        val etCodPesquisa = EditText(this)
+        builder.setView(etCodPesquisa)
+        builder.setCancelable(false)
+        builder.setNegativeButton("Fechar", null)
+        builder.setPositiveButton("Pesquisar", { dialogInterface, i ->
+            val cadastro = banco.search(etCodPesquisa.text.toString().toInt())
 
-        if (cadastro != null) {
-            binding.etNome.setText(cadastro.nome)
-            binding.etTelefone.setText(cadastro.telefone)
-        } else {
-            Toast.makeText(this, "Registro não encontrado", Toast.LENGTH_LONG).show()
-        }
-
+            if (cadastro != null) {
+                binding.etCod.setText(etCodPesquisa.text.toString())
+                binding.etNome.setText(cadastro.nome)
+                binding.etTelefone.setText(cadastro.telefone)
+            } else {
+                Toast.makeText(this, "Registro não encontrado", Toast.LENGTH_LONG).show()
+            }
+        })
+        builder.show()
     }
 }
